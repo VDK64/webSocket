@@ -10,6 +10,9 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.user.DefaultUserDestinationResolver;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
+import org.springframework.messaging.simp.user.UserDestinationResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +40,6 @@ public class MainController {
     @MessageMapping("/room")
     public void sendSpecific(@Payload Message msg) {
         OutputMessage out = new OutputMessage(msg.getFrom(), msg.getTo(), msg.getText(), new Date());
-        simpMessagingTemplate.convertAndSendToUser(msg.getTo(), "/queue/private", out);
+        simpMessagingTemplate.convertAndSendToUser(msg.getTo(), "/queue/updates", out);
     }
-
 }

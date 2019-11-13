@@ -45,7 +45,7 @@
   var username = "fuck";
 
   stompClient.connect({}, function (frame) {
-      stompClient.subscribe('/user/queue/private', function (msgOut) {
+      stompClient.subscribe('/user/queue/updates', function (msgOut) {
       showMessageOutput(JSON.parse(msgOut.body));
     });
     username = frame.headers['user-name'];
@@ -71,18 +71,12 @@
         }));
     }
 
-    // function showMessageOutput(msgOut) {
-    //   var response = document.getElementById('response-area');
-    //   var p = document.createElement('p');
-    //   p.style.wordWrap = 'break-word';
-    //   p.appendChild(document.createTextNode(msgOut.text + " (" + msgOut.date + ")"));
-    //   response.appendChild(p);
-    // }
-
-
-
     function showMessageOutput(msgOut) {
-      console.log(msgOut.text);
+      var response = document.getElementById('response-area');
+      var p = document.createElement('p');
+      p.style.wordWrap = 'break-word';
+      p.appendChild(document.createTextNode(msgOut.text + " (" + msgOut.date + ")"));
+      response.appendChild(p);
     }
 
   </script>
