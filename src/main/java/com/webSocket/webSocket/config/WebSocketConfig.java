@@ -1,8 +1,6 @@
 package com.webSocket.webSocket.config;
 
 import com.webSocket.webSocket.entities.AnonymousPrincipal;
-import com.webSocket.webSocket.services.MainService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
