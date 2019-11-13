@@ -42,19 +42,19 @@
   <script type="text/javascript">
 
   var stompClient = Stomp.over(new SockJS('/room'));
-  var username = "";
+  var username = "fuck";
 
   stompClient.connect({}, function (frame) {
       stompClient.subscribe('/user/queue/private', function (msgOut) {
       showMessageOutput(JSON.parse(msgOut.body));
     });
-    this.username = frame.headers['user-name'];
+    username = frame.headers['user-name'];
 });
 
     function sendMessage() {
       var text = document.getElementById('text').value;
       var to = document.getElementById('to').value;
-      var from = this.username;
+      var from = username;
       var response = document.getElementById('response-area');
       var p = document.createElement('p');
       p.setAttribute('id', 'message-from');

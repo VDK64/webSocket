@@ -30,16 +30,14 @@ public class MainController {
     }
 
     @RequestMapping("/messages")
-    public String getMessages(Model model) {
-        model.addAttribute("user", new User(""));
+    public String getMessages() {
         return "messages";
     }
 
     @MessageMapping("/room")
-    public void sendSpecific(@Payload Message msg, Principal principal, Model model) {
-        model.addAttribute("user", new User(principal.getName()));
+    public void sendSpecific(@Payload Message msg) {
         OutputMessage out = new OutputMessage(msg.getFrom(), msg.getTo(), msg.getText(), new Date());
-        simpMessagingTemplate.convertAndSendToUser(msg.getTo(), "/queue/updates", out);
+        simpMessagingTemplate.convertAndSendToUser(msg.getTo(), "/queue/private", out);
     }
 
 }
