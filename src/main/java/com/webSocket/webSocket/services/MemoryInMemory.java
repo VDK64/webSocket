@@ -27,4 +27,8 @@ public class MemoryInMemory {
             throw new CustomException(CustomErrors.ALREADY_EXIST, modelAndView);
         }
     }
+
+    public void deleteUser(String username) {
+        usernameList.remove(username);
+    }
 }
