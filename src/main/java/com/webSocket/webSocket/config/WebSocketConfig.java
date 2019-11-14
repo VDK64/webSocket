@@ -7,21 +7,24 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
+import org.springframework.web.socket.sockjs.transport.handler.SockJsWebSocketHandler;
 
 import java.security.Principal;
 import java.util.Map;
-import java.util.Random;
 
 @Configuration
 @EnableWebSocketMessageBroker
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    @Autowired
+    private HandShakeHandler handShakeHandler;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -32,31 +35,21 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/room")
-                .setHandshakeHandler(new HandShakeHandler())
+                .setHandshakeHandler(handShakeHandler)
                 .withSockJS();
     }
 
-    private static class HandShakeHandler extends DefaultHandshakeHandler {
+    @Component
+    private class HandShakeHandler extends DefaultHandshakeHandler {
         @Autowired
         private MemoryInMemory memoryInMemory;
-        private String[] usernameArray = {"vkd-", "karl-", "aleks-", "antony-", "franklin-", "alfred-"};
-        private String[] usernamePostfix = {"064", "64", "23", "51", "000", "777"};
-
-        private String createUsername() {
-            Random random = new Random();
-            return usernameArray[random.nextInt(usernameArray.length)] +
-                    usernamePostfix[random.nextInt(usernamePostfix.length)];
-        }
-
 
         @Override
         protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler,
                                           Map<String, Object> attributes) {
             Principal principal = request.getPrincipal();
-            String requestedSessionId = ((ServletServerHttpRequest) request).getServletRequest().getRequestedSessionId();
-            memoryInMemory.getUserSession().put(memoryInMemory.getUsername(), requestedSessionId);
             if (principal == null) {
-                return new AnonymousPrincipal(createUsername());
+                return new AnonymousPrincipal(memoryInMemory.getUsername());
             } else {
                 return principal;
             }
