@@ -24,6 +24,11 @@
       <#else>
         <button type="submit" name="button">Enter and start chat</button>
       </#if>
+      <#if error??>
+        <div class="alert alert-danger" role="alert" style="margin-top: 20px">
+          ${error}
+        </div>
+      </#if>
     </div>
   </div>
 </form>
