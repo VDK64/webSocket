@@ -1,8 +1,11 @@
 package com.webSocket.webSocket.config;
 
 import com.webSocket.webSocket.entities.AnonymousPrincipal;
+import com.webSocket.webSocket.services.MemoryInMemory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -34,6 +37,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     private static class HandShakeHandler extends DefaultHandshakeHandler {
+        @Autowired
+        private MemoryInMemory memoryInMemory;
         private String[] usernameArray = {"vkd-", "karl-", "aleks-", "antony-", "franklin-", "alfred-"};
         private String[] usernamePostfix = {"064", "64", "23", "51", "000", "777"};
 
@@ -43,10 +48,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     usernamePostfix[random.nextInt(usernamePostfix.length)];
         }
 
+
         @Override
         protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler,
                                           Map<String, Object> attributes) {
             Principal principal = request.getPrincipal();
+            String requestedSessionId = ((ServletServerHttpRequest) request).getServletRequest().getRequestedSessionId();
+            memoryInMemory.getUserSession().put(memoryInMemory.getUsername(), requestedSessionId);
             if (principal == null) {
                 return new AnonymousPrincipal(createUsername());
             } else {
