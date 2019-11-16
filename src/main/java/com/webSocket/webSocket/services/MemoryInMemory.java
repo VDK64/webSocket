@@ -23,11 +23,6 @@ public class MemoryInMemory {
     private String username;
     private Map<String, String> userSession = new HashMap<>();
 
-    @PostConstruct
-    private void init() {
-        usernameList.add("vdk");
-    }
-
     public void createUser(String username, ModelAndView modelAndView) {
         modelAndView.addObject("username", username);
         if (!usernameList.contains(username)) {

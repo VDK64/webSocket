@@ -1,24 +1,11 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <title>Websocket chat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="UTF-8">
-
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-
-<body>
-
+<#import "/header.ftl" as h>
+<@h.header>
   <div class="container" id="response-area" style="margin-top: 15px">
     <#if error??>
       <div class="alert alert-danger" role="alert">
         ${error}
       </div>
-      <a href="/" class="badge badge-primary">Main page</a>      
+      <a href="/" class="badge badge-primary">Main page</a>
     <#else>
       <#if messages??>
         <#list messages as message>
@@ -70,32 +57,27 @@
       p.setAttribute('class', 'message-from');
       p.appendChild(document.createTextNode(text + " (" + time + ")"));
       response.appendChild(p);
+      response.appendChild(document.createElement('hr'));
       stompClient.send("/app/room", {},
         JSON.stringify({
           'from': from,
           'to': to,
           'text': text,
-          'date': time,
+          'date': null,
         }));
     }
 
     function showMessageOutput(msgOut) {
-      var time = new Date();
+      // var time = new Date();
       var response = document.getElementById('response-area');
       var p = document.createElement('p');
       p.setAttribute('id', 'message-to');
       p.setAttribute('align', 'left');
       p.setAttribute('class', 'message-to');
       p.style.wordWrap = 'break-word';
-      p.appendChild(document.createTextNode(msgOut.text + " (" + time + ")"));
+      p.appendChild(document.createTextNode(msgOut.text + " (" + msgOut.date + ")"));
       response.appendChild(p);
+      response.appendChild(document.createElement('hr'));
     }
   </script>
-
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-</body>
-
-</html>
+  </@h.header>
