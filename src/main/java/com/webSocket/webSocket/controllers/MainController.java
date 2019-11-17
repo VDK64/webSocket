@@ -45,7 +45,7 @@ public class MainController {
     @RequestMapping("/messages")
     public String getMessages(HttpServletRequest request) {
         String username = (String) request.getSession().getAttribute("username");
-        request.getSession().removeAttribute("username");
+//        request.getSession().removeAttribute("username");
         if (username == null)
             throw new CustomException(CustomErrors.USERNAME_NULL, new ModelAndView("messages"));
         return "messages";

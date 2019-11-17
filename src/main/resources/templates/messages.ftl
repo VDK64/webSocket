@@ -28,15 +28,13 @@
       </div>
       <ul id="messageArea">
       </ul>
-      <form id="messageForm" name="messageForm">
         <div class="form-group">
           <div class="input-group clearfix">
             <input type="text" id="message" placeholder="Write a message..." autocomplete="off" class="form-control" />
             <input type="text" id="to" placeholder="Write destination" autocomplete="off" class="form-control" />
-            <button type="submit" onclick="sendMessage();" class="primary">Send</button>
+            <button onclick="sendMessage();" class="primary">Send</button>
           </div>
         </div>
-      </form>
     </div>
   </div>
   </#if>
@@ -60,7 +58,7 @@ var colors = [
 
 stompClient.connect({}, function(frame) {
 stompClient.subscribe('/user/queue/updates', function(msgOut) {
-  onMessageReceived(JSON.parse(msgOut.body));
+  onMessageReceived(msgOut);
 });
   username = frame.headers['user-name'];
 });
@@ -76,6 +74,23 @@ function sendMessage(event) {
         };
         stompClient.send("/app/room", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
+        var messageElement = document.createElement('li');
+        messageElement.classList.add('chat-message');
+        var avatarElement = document.createElement('i');
+        var avatarText = document.createTextNode(username);
+        avatarElement.appendChild(avatarText);
+        avatarElement.style['background-color'] = getAvatarColor(username);
+        messageElement.appendChild(avatarElement);
+        var usernameElement = document.createElement('span');
+        var usernameText = document.createTextNode(username);
+        usernameElement.appendChild(usernameText);
+        messageElement.appendChild(usernameElement);
+        var textElement = document.createElement('p');
+        var messageText = document.createTextNode(messageContent);
+        textElement.appendChild(messageText);
+        messageElement.appendChild(textElement);
+        messageArea.appendChild(messageElement);
+        messageArea.scrollTop = messageArea.scrollHeight;
     }
 }
 
@@ -110,10 +125,6 @@ function getAvatarColor(messageSender) {
 }
 
   </script>
-
-</body>
-
-</html>
 </body>
 
 </html>
