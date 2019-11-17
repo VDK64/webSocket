@@ -14,10 +14,12 @@
 <body>
 
   <#if error??>
+  <div class="container" style="margin-top: 15px">
     <div class="alert alert-danger" role="alert">
       ${error}
     </div>
     <a href="/" class="badge badge-primary">Main page</a>
+  </div>
   <#else>
   <div id="chat-page" class="">
     <div class="chat-container">
@@ -31,7 +33,7 @@
           <div class="input-group clearfix">
             <input type="text" id="message" placeholder="Write a message..." autocomplete="off" class="form-control" />
             <input type="text" id="to" placeholder="Write destination" autocomplete="off" class="form-control" />
-            <button type="submit" class="primary">Send</button>
+            <button type="submit" onclick="sendMessage();" class="primary">Send</button>
           </div>
         </div>
       </form>
@@ -46,33 +48,26 @@
   'use strict';
 var usernamePage = document.querySelector('#username-page');
 var chatPage = document.querySelector('#chat-page');
-// var usernameForm = document.querySelector('#usernameForm');
 var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
-var to = document.querySelector('#to');
-var stompClient = null;
+var stompClient = Stomp.over(new SockJS('/room'));
 var username = null;
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
 ];
-function connect(event) {
-        stompClient = Stomp.over(new SockJS('/room'));
-        stompClient.connect({}, onConnected, onError);
-        username = frame.headers['user-name'];
-    event.preventDefault();
-}
 
-function onConnected() {
-    // Subscribe to the Public Topic
-    stompClient.subscribe('/user/queue/updates', onMessageReceived);
-    // Tell your username to the server
-
-}
+stompClient.connect({}, function(frame) {
+stompClient.subscribe('/user/queue/updates', function(msgOut) {
+  onMessageReceived(JSON.parse(msgOut.body));
+});
+  username = frame.headers['user-name'];
+});
 
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
+    var to = document.getElementById('to').value;
     if(messageContent && stompClient) {
         var chatMessage = {
             from: username,
@@ -82,7 +77,6 @@ function sendMessage(event) {
         stompClient.send("/app/room", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
-    event.preventDefault();
 }
 
 function onMessageReceived(payload) {
@@ -114,9 +108,6 @@ function getAvatarColor(messageSender) {
     var index = Math.abs(hash % colors.length);
     return colors[index];
 }
-
-// usernameForm.addEventListener('submit', connect, true)
-messageForm.addEventListener('submit', sendMessage, true)
 
   </script>
 
