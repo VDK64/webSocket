@@ -3,18 +3,17 @@ package com.webSocket.webSocket.services;
 import com.webSocket.webSocket.exception.CustomErrors;
 import com.webSocket.webSocket.exception.CustomException;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
-import javax.annotation.PostConstruct;
-import java.io.ObjectStreamClass;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 @Getter
