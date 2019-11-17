@@ -193,17 +193,14 @@ button.accent {
 
 #chat-page .chat-message i {
     position: absolute;
-    width: 42px;
-    height: 42px;
+    width: 50px;
     overflow: hidden;
     left: 10px;
     display: inline-block;
     vertical-align: middle;
     font-size: 18px;
     line-height: 42px;
-    color: #fff;
     text-align: center;
-    border-radius: 50%;
     font-style: normal;
     text-transform: uppercase;
 }
